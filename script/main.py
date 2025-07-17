@@ -26,9 +26,17 @@ def get_arguments():
 
     return args.url, args.argument
 
+def print_banner():
+    print(colored("""
+█▀▀ █▀█ █▀█ █░█░█ ▄▀█ █▀█ █▀▄ █▀ █░█ █▀▀ █░░ █░░
+█▀░ █▄█ █▀▄ ▀▄▀▄▀ █▀█ █▀▄ █▄▀ ▄█ █▀█ ██▄ █▄▄ █▄▄\n""", 'white'))
+
+    print(colored("""Mᴀᴅᴇ ʙʏ sᴀᴍᴍʏ-ᴜʟғʜ\n""", 'yellow'))
+
 def main():
     global my_shell
 
+    print_banner()
     url, argument = get_arguments()
 
     my_shell = ForwardShell(url, argument)

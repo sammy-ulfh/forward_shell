@@ -71,6 +71,7 @@ class ForwardShell:
         try:
             requests.get(self.main_url, params=data, timeout=5)
         except:
+            print(colored(f"\n[+] Connected to {self.main_url}?{self.arg}=[Your command]\n", "green"))
             pass
 
     def start(self):
@@ -102,6 +103,7 @@ class ForwardShell:
                     sys.exit(1)
                                 
             if self.is_pseudo_term:
+                entry = colored(output.split('\n')[-1], "yellow")
                 output = "\n" + '\n'.join(output.split('\n')[2:-1]) + "\n" 
             
             print(output)
